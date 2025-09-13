@@ -18,5 +18,3 @@ services:
       - API_SERVICE_URL=api:8080
     depends_on:
       - api
-    volumes:
-      - ./src/A8A.Web:/app
