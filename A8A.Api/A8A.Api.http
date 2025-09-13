@@ -1,0 +1,6 @@
+@A8A.Api_HostAddress = http://localhost:5208
+
+GET {{A8A.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
