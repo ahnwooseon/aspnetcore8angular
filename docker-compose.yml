@@ -3,18 +3,48 @@ services:
     build:
       context: .
       dockerfile: src/A8A.Api/Dockerfile
+      target: final
+    container_name: a8a-api
     ports:
       - "40080:8080"
     environment:
       - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_LOGGING__LOGLEVEL__DEFAULT=Information
+    restart: unless-stopped
+    networks:
+      - a8a-network
+    volumes:
+      - api-logs:/var/log
 
   web:
     build:
       context: ./src/A8A.Web
       dockerfile: Dockerfile
+      target: final
+    container_name: a8a-web
     ports:
       - "4200:80"
     environment:
-      - API_SERVICE_URL=api:8080
+      - API_SERVICE_URL=http://api:8080
+      - NODE_ENV=production
     depends_on:
       - api
+    restart: unless-stopped
+    networks:
+      - a8a-network
+    volumes:
+      - web-logs:/var/log/nginx
+
+networks:
+  a8a-network:
+    driver: bridge
+    name: a8a-network
+
+volumes:
+  api-logs:
+    driver: local
+    name: a8a-api-logs
+  web-logs:
+    driver: local
+    name: a8a-web-logs
